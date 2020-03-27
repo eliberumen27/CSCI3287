@@ -1,0 +1,243 @@
+1.)
+SELECT * FROM productlines;
+
+1.)
+'Classic Cars', 'Attention car enthusiasts: Make your wildest car ownership dreams come true. Whether you are looking for classic muscle cars, dream sports cars or movie-inspired miniatures, you will find great choices in this category. These replicas feature superb attention to detail and craftsmanship and offer features such as working steering system, opening forward compartment, opening rear trunk with removable spare wheel, 4-wheel independent spring suspension, and so on. The models range in size from 1:10 to 1:24 scale and include numerous limited edition and several out-of-production vehicles. All models include a certificate of authenticity from their manufacturers and come fully assembled and ready for display in the home or office.', NULL, ?
+'Motorcycles', 'Our motorcycles are state of the art replicas of classic as well as contemporary motorcycle legends such as Harley Davidson, Ducati and Vespa. Models contain stunning details such as official logos, rotating wheels, working kickstand, front suspension, gear-shift lever, footbrake lever, and drive chain. Materials used include diecast and plastic. The models range in size from 1:10 to 1:50 scale and include numerous limited edition and several out-of-production vehicles. All models come fully assembled and ready for display in the home or office. Most include a certificate of authenticity.', NULL, ?
+'Planes', 'Unique, diecast airplane and helicopter replicas suitable for collections, as well as home, office or classroom decorations. Models contain stunning details such as official logos and insignias, rotating jet engines and propellers, retractable wheels, and so on. Most come fully assembled and with a certificate of authenticity from their manufacturers.', NULL, ?
+'Ships', 'The perfect holiday or anniversary gift for executives, clients, friends, and family. These handcrafted model ships are unique, stunning works of art that will be treasured for generations! They come fully assembled and ready for display in the home or office. We guarantee the highest quality, and best value.', NULL, ?
+'Trains', 'Model trains are a rewarding hobby for enthusiasts of all ages. Whether you\'re looking for collectible wooden trains, electric streetcars or locomotives, you\'ll find a number of great choices for any budget within this category. The interactive aspect of trains makes toy trains perfect for young children. The wooden train sets are ideal for children under the age of 5.', NULL, ?
+'Trucks and Buses', 'The Truck and Bus models are realistic replicas of buses and specialized trucks produced from the early 1920s to present. The models range in size from 1:12 to 1:50 scale and include numerous limited edition and several out-of-production vehicles. Materials used include tin, diecast and plastic. All models include a certificate of authenticity from their manufacturers and are a perfect ornament for the home and office.', NULL, ?
+'Vintage Cars', 'Our Vintage Car models realistically portray automobiles produced from the early 1900s through the 1940s. Materials used include Bakelite, diecast, plastic and wood. Most of the replicas are in the 1:18 and 1:24 scale sizes, which provide the optimum in detail and accuracy. Prices range from $30.00 up to $180.00 for some special limited edition replicas. All models include a certificate of authenticity from their manufacturers and come fully assembled and ready for display in the home or office.', NULL, ?
+
+2.)
+SELECT employeeNumber, lastname, firstname, extension FROM employees, offices
+WHERE offices.officeCode = employees.officeCode AND offices.city = "San Francisco";
+
+2.)
+'1002','Murphy','Diane','x5800'
+'1056','Patterson','Mary','x4611'
+'1076','Firrelli','Jeff','x9273'
+'1143','Bow','Anthony','x5428'
+'1165','Jennings','Leslie','x3291'
+'1166','Thompson','Leslie','x4065'
+
+3.)
+SELECT productCode, productName, productVendor, buyPrice, quantityInStock
+FROM products
+WHERE products.productLine = "Vintage Cars" AND products.quantityInStock BETWEEN 1000 AND 5000;
+
+3.)
+'S18_1749','1917 Grand Touring Sedan','Welly Diecast Productions','86.70','2724'
+'S18_2949','1913 Ford Model T Speedster','Carousel DieCast Legends','60.78','4189'
+'S18_3140','1903 Ford Model A','Unimax Art Galleries','68.30','3913'
+'S18_3856','1941 Chevrolet Special Deluxe Cabriolet','Exoto Designs','64.58','2378'
+'S24_2022','1938 Cadillac V-16 Presidential Limousine','Classic Metal Creations','20.61','2847'
+'S24_3420','1937 Horch 930V Limousine','Autoart Studio Design','26.30','2902'
+'S24_3969','1936 Mercedes Benz 500k Roadster','Red Start Diecast','21.75','2081'
+'S24_4258','1936 Chrysler Airflow','Second Gear Diecast','57.46','4710'
+
+4.)
+SELECT productCode, productName, productVendor, buyPrice, MSRP FROM products
+WHERE MSRP = (SELECT MIN(MSRP) FROM products);
+
+4.)
+'S24_1937','1939 Chevrolet Deluxe Coupe','Motor City Art Classics','22.57','33.19'
+
+5.)
+SELECT productName, MSRP - buyPrice AS profit FROM products
+WHERE MSRP - buyPrice = (SELECT MAX(MSRP - buyPrice) FROM products);
+
+5.)
+'1952 Alpine Renault 1300', '115.72'
+
+6.)
+SELECT country, COUNT(*) AS Customers FROM customers
+GROUP BY country HAVING COUNT(*) BETWEEN 4 AND 12
+ORDER BY Customers DESC;
+
+6.)
+'France','12'
+'Spain','7'
+'Australia','5'
+'UK','5'
+'Italy','4'
+'New Zealand','4'
+
+7.)
+SELECT orderdetails.productCode, products.productName, quantityOrdered AS OrderCount
+FROM orderdetails, products
+WHERE orderdetails.productCode = products.productCode
+AND quantityOrdered = (SELECT MAX(quantityOrdered) FROM orderdetails)
+
+7.)
+'S12_4675', '1969 Dodge Charger', '97'
+
+8.)
+SELECT employeeNumber, CONCAT(firstName, " ", lastName) AS name FROM employees
+WHERE reportsTo IN (SELECT employeeNumber FROM employees WHERE CONCAT(firstName, " ", lastName) = "Diane Murphy" OR CONCAT(firstName, " ", lastName) = "Gerard Bondur");
+
+8.)
+'1056','Mary Patterson'
+'1076','Jeff Firrelli'
+'1337','Loui Bondur'
+'1370','Gerard Hernandez'
+'1401','Pamela Castillo'
+'1501','Larry Bott'
+'1504','Barry Jones'
+'1702','Martin Gerard'
+
+9.)
+SELECT employeeNumber, lastName, firstname FROM employees
+WHERE reportsTo IS NULL;
+
+9.)
+'1002', 'Murphy', 'Diane'
+
+10.)
+SELECT p.productName FROM products as p, productlines as pl
+WHERE pl.productLine = p.productLine
+AND p.productLine = "Vintage Cars"
+AND LEFT(p.productName, 4) BETWEEN 1930 AND 1939;
+
+10.)
+'1937 Lincoln Berline'
+'1936 Mercedes-Benz 500K Special Roadster'
+'1932 Model A Ford J-Coupe'
+'1934 Ford V8 Coupe'
+'1932 Alfa Romeo 8C2300 Spider Sport'
+'1939 Cadillac Limousine'
+'1939 Chevrolet Deluxe Coupe'
+'1938 Cadillac V-16 Presidential Limousine'
+'1937 Horch 930V Limousine'
+'1936 Mercedes Benz 500k Roadster'
+'1936 Chrysler Airflow'
+'1930 Buick Marquette Phaeton'
+
+11.)
+SELECT MONTHNAME(orderDate) AS month, COUNT(orderNumber) AS OrdersPlaced FROM orders
+WHERE YEAR(orderDate) = 2003
+GROUP BY month HAVING COUNT(*)
+ORDER BY month DESC
+LIMIT 1;
+
+11.)
+'September', '8'
+
+12.)
+SELECT lastName, firstName FROM employees
+WHERE (jobTitle = 'Sales Rep')
+AND NOT employeeNumber IN
+(SELECT DISTINCT(salesRepEmployeeNumber) FROM customers WHERE salesrepemployeenumber IS NOT NULL);
+
+12.)
+'King','Tom'
+'Kato','Yoshimi'
+
+13.)
+SELECT customerName FROM customers c
+WHERE c.country != "Germany"
+AND NOT c.customerNumber IN (SELECT DISTINCT(customerNumber) FROM orders WHERE customerNumber IS NOT NULL);
+
+13.)
+'Havel & Zbyszek Co'
+'American Souvenirs Inc'
+'Porto Imports Co.'
+'Asian Shopping Network, Co'
+'ANG Resellers'
+'BG&E Collectables'
+'Schuyler Imports'
+'Asian Treasures, Inc.'
+'SAR Distributors, Co'
+'Lisboa Souveniers, Inc'
+'Precious Collectables'
+'Anton Designs, Ltd.'
+'Kremlin Collectables, Co.'
+'Raanan Stores, Inc'
+
+14.)
+SELECT customerName, SUM(quantityOrdered) AS total FROM customers c, orders o, orderdetails od
+WHERE c.customerNumber = o.customerNumber
+AND o.orderNumber = od.orderNumber
+GROUP BY customerName HAVING SUM(quantityOrdered) < 400;
+
+14.)
+'Atelier graphique', '270'
+'Cambridge Collectables Co.', '357'
+'Auto-Moto Classics Inc.', '287'
+'Boards & Toys Co.', '102'
+'Royale Belge', '278'
+'Microscale Inc.', '381'
+'Frau da Collezione', '272'
+'Double Decker Gift Stores, Ltd', '357'
+
+15.)
+CREATE TABLE TopCustomers (
+    CustomerNumber int NOT NULL,
+    ContactDate DATE NOT NULL,
+    OrderTotal DECIMAL(9, 2) NOT NULL,
+    CONSTRAINT TopCustomer_PK PRIMARY KEY (CustomerNumber)
+);
+
+16.)
+INSERT INTO TopCustomers (CustomerNumber, ContactDate, OrderTotal)
+SELECT c.customerNumber, NOW(), (priceEach * quantityOrdered) AS totalValue FROM customers c, orders o, orderdetails od
+WHERE c.customerNumber = o.customerNumber
+AND o.orderNumber = od.orderNumber
+GROUP BY CustomerNumber HAVING SUM(totalValue) > 140000;
+
+17.)
+SELECT * FROM TopCustomers
+ORDER BY OrderTotal DESC;
+
+17.)
+'151','2019-03-06','8889.50'
+'450','2019-03-06','6670.35'
+'148','2019-03-06','6445.89'
+'141','2019-03-06','4468.96'
+'187','2019-03-06','4374.14'
+'119','2019-03-06','3660.75'
+'114','2019-03-06','3449.26'
+'323','2019-03-06','2880.00'
+'124','2019-03-06','2554.44'
+'131','2019-03-06','2440.50'
+
+18.)
+ALTER TABLE TopCustomers
+ADD OrderCount int;
+
+19.)
+UPDATE TopCustomers
+SET OrderCount = (SELECT FLOOR(RAND()*(18-0+1)+0))
+WHERE CustomerNumber > 0;
+
+19.)
+'114','2019-03-06','3449.26','14'
+'119','2019-03-06','3660.75','16'
+'124','2019-03-06','2554.44','0'
+'131','2019-03-06','2440.50','9'
+'141','2019-03-06','4468.96','10'
+'148','2019-03-06','6445.89','3'
+'151','2019-03-06','8889.50','3'
+'187','2019-03-06','4374.14','9'
+'323','2019-03-06','2880.00','15'
+'450','2019-03-06','6670.35','12'
+
+20.)
+SELECT * FROM TopCustomers
+ORDER BY OrderCount DESC;
+
+20.)
+'119','2019-03-06','3660.75','16'
+'323','2019-03-06','2880.00','15'
+'114','2019-03-06','3449.26','14'
+'450','2019-03-06','6670.35','12'
+'141','2019-03-06','4468.96','10'
+'131','2019-03-06','2440.50','9'
+'187','2019-03-06','4374.14','9'
+'148','2019-03-06','6445.89','3'
+'151','2019-03-06','8889.50','3'
+'124','2019-03-06','2554.44','0'
+
+21.)
+DROP TABLE TopCustomers;
